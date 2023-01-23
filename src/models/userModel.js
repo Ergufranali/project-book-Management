@@ -1,6 +1,14 @@
 const mongoose=require('mongoose')
 
 
+
+
+const addressSchema = mongoose.Schema({
+    street: String,
+    city: String,
+    pincode: String,
+});
+
 const userSchema =new mongoose.Schema({
     title:{
         type:String,
@@ -27,9 +35,7 @@ const userSchema =new mongoose.Schema({
 
     },
     address:{
-        'street':String,
-        'city':String,
-        'pincode':String
+        type:addressSchema
     }
 
 },{timestamps:true})
