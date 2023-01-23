@@ -1,8 +1,6 @@
 const bookModel=require('../models/bookModel')
-const router = require('../routes/route')
 const reviewModel=require('../models/reviewModel')
 const userModel =require('../models/userModel')
-const { default: mongoose } = require('mongoose')
 const ObjectId = require('mongoose').Types.ObjectId;
 const moment =require('moment')
 
@@ -15,32 +13,38 @@ const createBook =async function(req,res){
 
     
 
-    data.title=data.title.trim()
+    
     if(!data.title) return res.status(400).send({status : false , message : "title is mandatory"})
-    const book = await bookModel.findOne({title:data.title,isDeleted:false})
+    data.title=data.title.trim()
+    let book = await bookModel.findOne({title:data.title,isDeleted:false})
     if(book) return res.status(400).send({status:false, message:"book already created"})
 
-    data.excerpt=data.excerpt.trim()
+    
     if(!data.excerpt) return res.status(400).send({status : false , message : "excerpt is mandatory"})
+    data.excerpt=data.excerpt.trim()
 
-    data.userId=data.userId.trim()
+    
     if(!data.userId) return res.status(400).send({ status : false , message : "userId is mandatory"})
+    data.userId=data.userId.trim()
     if(!ObjectId.isValid(data.userId)) return res.status(400).send({status:false, message:"user id is not valid"})
     const user = await userModel.findById(data.userId)
     if(!user) return res.status(401).send({status:false, message:"user id not found"})
 
 
-    data.ISBN=data.ISBN.trim()
+    
     if(!data.ISBN) return res.status(400).send({status:false,message:"ISBN is mandatory"})
+    data.ISBN=data.ISBN.trim()
     if(data.ISBN.length !=13) return res.status(400).send({status:false, message:"ISBN is not valid"})
     book = await bookModel.findOne({ISBN:data.ISBN})
     if(book) return res.status(400).send({status:false, message:"ISBN must be unique"})
 
+    
+    if(!data.category) return res.status(400).send({status:false,message:"category is mandatory"})
     data.category=data.category.trim()
-    if(!category) return res.status(400).send({status:false,message:"category is mandatory"})
 
+    
+    if(!data.subcategory) return res.status(400).send({status:false, message:"subcategory is mandatory"})
     data.subcategory=data.subcategory.trim()
-    if(!subcategory) return res.status(400).send({status:false, message:"subcategory is mandatory"})
 
     data.releasedAt =moment(). format('YYYY-MM-DD')
 
@@ -50,7 +54,7 @@ const createBook =async function(req,res){
 
 const getBooks= async function(req,res){
     let queries= req.query
-    queries.isDeleted=falseg
+    queries.isDeleted=false
     const books = await bookModel.find(queries).select({_id:1,title:1,excerpt:1,userId:1,category:1,releasedAt:1,reviews:1})
     if(books.length==0) return res.status(404).send({status:false,message:"books not found"})
     res.status(200).send({status:true,data:books})
@@ -58,7 +62,8 @@ const getBooks= async function(req,res){
 }
 
 const getBookById = async function(req,res){
-    const bookId=req.param.bookId
+    const bookId=req.params.bookId
+    
     let book = await bookModel.findOne({_id:bookId,isDeleted:false})
     if(!book) return res.status(404).send({status:false, message: "book not found"})
     const reviewsData = await reviewModel.find({bookId:bookId,isDeleted:false})
@@ -74,7 +79,7 @@ const getBookById = async function(req,res){
 const updateBookByID =async function(req,res){
 
     const updationDetails= req.body
-    const bookId= req.param.bookId
+    const bookId= req.params.bookId
     const book = await bookModel.findOne({_id:bookId,isDeleted:false})
     if(!book) return res.status(404).send({status:false,message:"book not found"})
     if(Object.keys(updationDetails).length==0) return res.status(400).send({status:false,message:"there is no details for updation"})
@@ -86,11 +91,11 @@ const updateBookByID =async function(req,res){
 
 
 const deleteBookByID =async function(req,res){
-    const bookId=req.param.bookId
+    const bookId=req.params.bookId
     const book = await bookModel.findOne({_id:bookId,isDeleted:false})
 
     if(!book) return res.status(404).send({status:false,message:"book not found"})
-    const updatedBook = await bookModel.findById(bookId,{$set:{isDeleted:true, deletedAt:Date.now()}},{new:true})
+    const updatedBook = await bookModel.findByIdAndUpdate(bookId,{$set:{isDeleted:true, deletedAt:Date.now()}},{new:true})
     res.status(200).send({status:true,data:updatedBook})
 
 }
