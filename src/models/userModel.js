@@ -1,43 +1,42 @@
-const mongoose=require('mongoose')
+const mongoose = require ('mongoose')
 
-
-
-
-const addressSchema = mongoose.Schema({
-    street: String,
-    city: String,
-    pincode: String,
-});
-
-const userSchema =new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     title:{
-        type:String,
-        enum:['Mr','Mrs','Miss'],
-        required:true
+        type: String,
+        require: true,
+        enum: ["Mr","Mrs","Miss"],
+        trim: true
     },
     name:{
-        type:String,
-        required:true
+        type: String,
+        require: true,
+        triim: true
     },
     phone:{
-        type:String,
-        required:true,
-        unique:true
+        type: String,
+        require: true,
+        unique:true,
+        trim: true
     },
     email:{
         type:String,
-        required:true,
-        unique:true
+        require: true,
+        unique: true,
+        trim: true,
+        lowercase: true
     },
     password:{
-        type:String,
-        required:true,
-
+        type: String,
+        require: true,
+        trim: true,
+        min: 8,
+        max: 15
     },
     address:{
-        type:addressSchema
-    }
+        street: {type: String, trim:true},
+        city: {type: String, trim: true},
+        pincode: {type: String, trim: true}
+    },
+},{timestamps: true})
 
-},{timestamps:true})
-
-module.exports=mongoose.model('user',userSchema)
+module.exports= mongoose.model("User",userSchema)

@@ -6,9 +6,9 @@ const reviewController=require('../controllers/reviewController')
 
 
 
-
 router.post('/register',userController.createUser)
 router.post('/login',userController.login)
+
 
 
 router.post('/books',bookController.createBook)
@@ -19,8 +19,8 @@ router.delete('/books/:bookId',bookController.deleteBookByID)
 
 
 router.post('/books/:bookId/review', reviewController.addReview)
-router.put('books/:bookId/review/:reviewId',reviewController.updateReviewByID)
-router.delete('books/:bookId/review/:reviewId',reviewController.deleteReviewById)
+router.put('/books/:bookId/review/:reviewId',reviewController.updateReviewByID)
+router.delete('/books/:bookId/review/:reviewId',reviewController.deleteReviewById)
 
 
 module.exports=router
