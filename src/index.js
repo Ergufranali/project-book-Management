@@ -10,7 +10,7 @@ app.use(express.json())
 mongoose.set('strictQuery',true)
 
 
-mongoose.connect("mongodb+srv://tarun21:tarun1616@cluster0.h0l8mir.mongodb.net/group11Database",
+mongoose.connect("mongodb+srv://Paras_Anand:paras4321@cluster0.3z8igom.mongodb.net/group11Database",
     {useNewUrlParser:true}
 )
 .then(()=>console.log("mongodb is connected"))
