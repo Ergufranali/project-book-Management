@@ -1,0 +1,23 @@
+const jwt = require ('jsonwebtoken')
+
+exports.Authentication = async function(req,res,next){
+    try{
+      let token = req.headers['x-api-key'];
+      if(!token ) return res.status(400).send({status: false, msg:"Authentication token is missing"})
+      jwt.verify(token, "Ghufran-Tarun-Paras-Aradhay-project4",function(err,decoded){
+        if(err){
+          return res.status(500).send({status:false, err: err.message});
+        }
+        else{
+          req.decode = decoded
+          console.log( req.decode)
+          return next();
+        }
+      })
+    }
+    catch(error){
+      res.status(500).send({status:false,msg:error.message})
+    }
+  }
+  
+  

@@ -78,7 +78,7 @@ const login = async function (req, res){
 
         // create token--------
         let key = jwt.sign(
-            {id: userLogin._id},"GPT",{expiresIn:'1h'});
+            {id: userLogin._id},"Ghufran-Tarun-Paras-Aradhay-project4",{expiresIn:'1h'});
             
             res.setHeader("x-api-key", key);
     
@@ -87,6 +87,8 @@ const login = async function (req, res){
         res.status(500).send({status:false,message:error.message})
     }
 }
+
+
 
 
 module.exports.createUser=createUser
