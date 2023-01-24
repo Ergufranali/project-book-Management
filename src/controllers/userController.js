@@ -3,7 +3,6 @@ const {isValid} = require ("../validator/validation")
 const validator = require ('validator')
 const jwt = require ('jsonwebtoken')
 // **************regex password********/
-let validpassword = /^[a-zA-Z0-9!@#$%^&*]{8,16}$/
 
 // create user ----------------------------------------
 const createUser = async function (req, res){
@@ -27,11 +26,12 @@ const createUser = async function (req, res){
         if (!(["Mr", "Mrs", "Miss"].includes(title))) return res.status(400).send({ status: false, message: "you can use only Mr, Mrs, Miss" })
 
         if(!(phone.match(/^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/))) return res.status(400).send({ status: false, message: "phone number is not valid" })
+
+        //check validation for phone
+        let checkPhone = await userModel.findOne({phone:phone})
+        if(checkPhone) return res.status(400).send({status:false, message: "phone Number already exist"})
         
-        // check validation for password---------------------------------------------------------------
-        if(!validpassword.test(password)){
-            return res.status(400).send({status:false, message:"please enter valid alphanumeric password min character 8"})
-        }
+
 
         //check validation for email ---------------------------------------------------------------
         if (!validator.isEmail(email)) return res.status(400).send({ status: false, msg: "please enter valid email address!" })
@@ -39,9 +39,13 @@ const createUser = async function (req, res){
         let checkEmail = await userModel.findOne({ email: email })
         if (checkEmail) return res.status(400).send({ status: false, message: "email is already exist" })
 
-        //check validation for phone
-        let checkPhone = await userModel.findOne({phone:phone})
-        if(checkPhone) return res.status(400).send({status:false, message: "phone Number already exist"})
+
+        // check validation for password---------------------------------------------------------------
+        if (!(password.match(/(?=.{8,15})/))) return res.status(400).send({ status: false, error: "Password should be of atleast 8 charactors" })
+        if (!(password.match(/.*[a-zA-Z]/))) return res.status(400).send({ status: false, error: "Password should contain alphabets" })
+        if (!(password.match(/.*\d/))) return res.status(400).send({ status: false, error: "Password should contain digits" })
+
+       
 
         let savedData = await userModel.create(data)
         return res.status(201).send({status: true, message: "Data created SuccesFully", data: savedData})
