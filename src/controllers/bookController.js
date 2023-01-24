@@ -84,6 +84,8 @@ const updateBookByID =async function(req,res){
     const book = await bookModel.findOne({_id:bookId,isDeleted:false})
     if(!book) return res.status(404).send({status:false,message:"book not found"})
     if(Object.keys(updationDetails).length==0) return res.status(400).send({status:false,message:"there is no details for updation"})
+    const bookWithTitel= await bookModel.findOne({title:updationDetails.title})
+    if(bookWithTitel) return res.status(400).send({status:false, message:"title with that you want update already exist"})
     const updatedBook = await bookModel.findByIdAndUpdate(bookId,{$set:updationDetails},{new:true})
     res.status(200).send({status:true,data:updatedBook})
     
