@@ -14,7 +14,7 @@ router.post('/login',userController.login)
 
 router.post('/books',middleware.Authentication,bookController.createBook)
 router.get('/books',middleware.Authentication,bookController.getBooks)
-router.get('/books/:bookId',middleware.Authentication,middleware.Authentication,bookController.getBookById)
+router.get('/books/:bookId',middleware.Authentication,bookController.getBookById)
 router.put('/books/:bookId',middleware.Authentication,bookController.updateBookByID)
 router.delete('/books/:bookId',middleware.Authentication,bookController.deleteBookByID)
 
