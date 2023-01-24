@@ -69,6 +69,7 @@ const getBookById = async function(req,res){
     const reviewsData = await reviewModel.find({bookId:bookId,isDeleted:false})
     book=book.toObject()
     book.reviewsData=reviewsData
+    book.reviews=reviewsData.length
     res.status(200).send({status:true,data:book})
     
 
