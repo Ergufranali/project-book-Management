@@ -4,23 +4,23 @@ const ObjectId = mongoose.Schema.Types.ObjectId
 const reviewSchema = new mongoose.Schema({
     bookId: {
         type: ObjectId,
-        require: true,
+        required: true,
         ref: 'Book'
     },
     reviewedBy: {
         type: String,
-        require: true,
+        required: true,
         default: 'Guest',
         trim: true
     },
     reviewedAt: {
         type: Date,
-        require: true,
+        required: true,
         trim: true
     },
     rating: {
         type: Number,
-        require: true,
+        required: true,
     },
     review: {
         type: String,

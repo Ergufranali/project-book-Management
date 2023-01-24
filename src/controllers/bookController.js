@@ -8,6 +8,10 @@ const moment =require('moment')
 
 const createBook =async function(req,res){
     let data = req.body
+    //Authorization
+    if(req.decode.id!=data.userId) return res.status(403).send({status:false,message:"you are not authorized"})
+
+
     if(Object.keys(data).length ===0) return res.status(400).send({status : false, message : "Please provide data"})
 
 
@@ -65,6 +69,8 @@ const getBookById = async function(req,res){
     
     let book = await bookModel.findOne({_id:bookId,isDeleted:false})
     if(!book) return res.status(404).send({status:false, message: "book not found"})
+
+
     const reviewsData = await reviewModel.find({bookId:bookId,isDeleted:false}).select({_id:1,bookId:1,reviewedBy:1,reviewedAt:1,rating:1,review:1})
     book=book.toObject()
     book.reviewsData=reviewsData
@@ -79,11 +85,15 @@ const updateBookByID =async function(req,res){
     const bookId= req.params.bookId
     const book = await bookModel.findOne({_id:bookId,isDeleted:false})
     if(!book) return res.status(404).send({status:false,message:"book not found"})
+    console.log(updationDetails)
+    //authorization
+    if(req.decode.id!=book.userId) return res.status(403).send({status:false,message:"you are not authorized"})
+
     if(Object.keys(updationDetails).length==0) return res.status(400).send({status:false,message:"there is no details for updation"})
-    const bookWithTitle= await bookModel.findOne({$or:[{title:updationDetails.title},{ISBN:updationDetails.ISBN}]})
+    const bookWithTitle= await bookModel.findOne({$or:[{title:updationDetails.title.toUpperCase()},{ISBN:updationDetails.ISBN}]})
     if(bookWithTitle)
     {
-        if(bookWithTitle.title==updationDetails.title) return res.status(400).send({status:false, message:"title with that you want to update already exist"})
+        if(bookWithTitle.title==updationDetails.title.toUpperCase()) return res.status(400).send({status:false, message:"title with that you want to update already exist"})
         if(bookWithTitle.ISBN==updationDetails.ISBN) return res.status(400).send({status:false, message:"ISBN with that you want to update already exist"})
     }
     updationDetails.releasedAt =moment(). format('YYYY-MM-DD')
@@ -99,6 +109,9 @@ const deleteBookByID =async function(req,res){
     const book = await bookModel.findOne({_id:bookId,isDeleted:false})
 
     if(!book) return res.status(404).send({status:false,message:"book not found"})
+
+    //authorization
+    if(req.decode.id!=book.userId) return res.status(403).send({status:false,message:"you are not authorized"})
     const updatedBook = await bookModel.findByIdAndUpdate(bookId,{$set:{isDeleted:true, deletedAt:Date.now()}},{new:true})
     res.status(200).send({status:true,data:updatedBook})
 

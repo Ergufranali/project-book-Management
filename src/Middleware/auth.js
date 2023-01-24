@@ -1,6 +1,6 @@
 const jwt = require ('jsonwebtoken')
 
-exports.Authentication = async function(req,res,next){
+const Authentication = async function(req,res,next){
     try{
       let token = req.headers['x-api-key'];
       if(!token ) return res.status(400).send({status: false, msg:"Authentication token is missing"})
@@ -20,4 +20,4 @@ exports.Authentication = async function(req,res,next){
     }
   }
   
-  
+module.exports.Authentication=Authentication
