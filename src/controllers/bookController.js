@@ -8,11 +8,12 @@ const moment =require('moment')
 
 const createBook =async function(req,res){
     let data = req.body
+    if(Object.keys(data).length ===0) return res.status(400).send({status : false, message : "Please provide data"})
     //Authorization ho rhi hai
     if(req.decode.id!=data.userId) return res.status(403).send({status:false,message:"you are not authorized"})
 
 
-    if(Object.keys(data).length ===0) return res.status(400).send({status : false, message : "Please provide data"})
+    
 
 
     if(!data.title) return res.status(400).send({status : false , message : "title is mandatory"})

@@ -77,12 +77,11 @@ const login = async function (req, res){
         let  userLogin = await userModel.findOne({email: email, password: password})
 
         // create token--------
-        let key = jwt.sign(
-            {id: userLogin._id},"Ghufran-Tarun-Paras-Aradhay-project4",{expiresIn:'1h'});
+        let key = jwt.sign({id: userLogin._id},"Ghufran-Tarun-Paras-Aradhay-project4",{expiresIn:'1h'});
             
-            res.setHeader("x-api-key", key);
+        res.setHeader("x-api-key", key);
     
-            res.status(200).send({status:true,message:"Success",Token:key});
+        res.status(200).send({status:true,message:"Success",Token:key});
     } catch (error){
         res.status(500).send({status:false,message:error.message})
     }
