@@ -60,14 +60,11 @@ const login = async function (req, res){
         if(!isValid(email)) return res.status(400).send({status: false, msg: "please enter the email to login"})
         if(!isValid(password)) return res.status(400).send({status:false, msg: "please enter the password to login"})
 
-        let Email = await userModel.findOne({email: email}) // db call email is present or not in Db //
-        if(!Email) return res.status(404).send({status:false, message: "Incorrect E-mail address"})// if not //
-
-        let Password = await userModel.findOne({password: password}) // password is present or not in Db //
-        if(!Password) return res.status(404).send({status:false, message: "Incorrect Password"}) // if not //
-
-        //if email and password is correct-----------------------------------------
+        
         let  userLogin = await userModel.findOne({email: email, password: password}) 
+        
+        //if email and password is not correct-----------------------------------------
+        if(!userLogin) return res.status(400).send({status:false,message:"incorrect email or password"})
 
         // create token--------
         let key = jwt.sign({id: userLogin._id},"Ghufran-Tarun-Paras-Aradhay-project4",{expiresIn:'1h'});
