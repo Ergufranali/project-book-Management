@@ -24,4 +24,9 @@ router.put('/books/:bookId/review/:reviewId',reviewController.updateReviewByID)
 router.delete('/books/:bookId/review/:reviewId',reviewController.deleteReviewById)
 
 
+router.all('/*',function(req,res){
+    res.status(404).send({message:"page not found"})
+})
+
+
 module.exports=router
