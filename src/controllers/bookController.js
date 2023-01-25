@@ -29,8 +29,8 @@ const createBook = async function (req, res) {
     if (!data.userId) return res.status(400).send({ status: false, message: "userId is mandatory" })
     data.userId = data.userId.trim()// trim title
     if (!ObjectId.isValid(data.userId)) return res.status(400).send({ status: false, message: "user id is not valid" })
-    const user = await userModel.findById(data.userId)
-    if (!user) return res.status(401).send({ status: false, message: "user id not found" })
+    // const user = await userModel.findById(data.userId)
+    // if (!user) return res.status(401).send({ status: false, message: "user id not found" })
 
     // validation for ISBN//
     if (!data.ISBN) return res.status(400).send({ status: false, message: "ISBN is mandatory" })

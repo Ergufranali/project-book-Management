@@ -2,6 +2,7 @@ const reviewModel = require('../models/reviewModel')
 const bookModel =require('../models/bookModel')
 const ObjectId = require('mongoose').Types.ObjectId;
 
+
 // review api -----------------------------------------------------------------------------------------
 const addReview =async function(req,res){
     
@@ -9,13 +10,16 @@ const addReview =async function(req,res){
     const data = req.body
     if(Object.keys(data).length==0) return res.stauts(400).send({status:false,message:"body is empty" })
     
-    if(!ObjectId.isValid(BookId))  res.status(400).send({status:false,message:"review created by Guest"})
+    if(!ObjectId.isValid(BookId))  res.status(400).send({status:false,message:"book id is not valid"})
     const book = await bookModel.findOne({_id:BookId,isDeleted:false})// db call if bookId is present or not //
     if(!book) return res.status(400).send({status:false, message:"book is not found with provided id"})
 
-
-    if(!data.reviewedBy) return res.status(400).send({stauts:false,message:"reviewedBy is mandatory"})
-    data.reviewedBy =data.reviewedBy.trim()
+    
+    if(data.reviewedBy!=undefined){
+        data.reviewedBy=data.reviewedBy.trim()
+        if(data.reviewedBy.length==0)  return res.status(400).send({status:false,message:"reviewedBy is mandatory"})
+    }
+    
 
     if(!data.rating) return res.status(400).send({status:false,message:"rating is mandatory"})
 
@@ -30,6 +34,7 @@ const addReview =async function(req,res){
     
 
     res.status(201).send({status:true, data:updatedBook})
+
 }
 
 
