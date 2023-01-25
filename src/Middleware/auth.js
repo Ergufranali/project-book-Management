@@ -1,8 +1,9 @@
 const jwt = require ('jsonwebtoken')
 
+// autentication ------------------------------------------------------------------------------
 const Authentication = async function(req,res,next){
     try{
-      let token = req.headers['x-api-key'];
+      let token = req.headers['x-api-key']; // header key
       if(!token ) return res.status(400).send({status: false, msg:"Authentication token is missing"})
       jwt.verify(token, "Ghufran-Tarun-Paras-Aradhay-project4",function(err,decoded){
         if(err){
