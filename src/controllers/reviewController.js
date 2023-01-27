@@ -22,6 +22,7 @@ const addReview = async function (req, res) {
 
 
         if (!data.rating) return res.status(400).send({ status: false, message: "rating is mandatory" })
+        if(data.rating>5 || data.rating<1) return res.status(400).send({status:false,message:"rating should be in range 1-5"})
 
         data.reviewedAt = Date.now() // adding date in reviewedAt
         data.bookId = BookId
