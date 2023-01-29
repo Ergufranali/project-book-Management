@@ -99,7 +99,9 @@ const updateBookByID = async function (req, res) {
         if (req.decode.id != book.userId) return res.status(403).send({ status: false, message: "you are not authorized" })
     
         if (Object.keys(updationDetails).length == 0) return res.status(400).send({ status: false, message: "there is no details for updation" })// if data is empty//
-        const bookWithTitle = await bookModel.findOne({ $or: [{ title: updationDetails.title.toUpperCase() }, { ISBN: updationDetails.ISBN }] }) // Db call if title is present //
+        if(updationDetails.title){
+            var bookWithTitle = await bookModel.findOne({ $or: [{ title: updationDetails.title.toUpperCase() }, { ISBN: updationDetails.ISBN }] })
+        }
     
         if (bookWithTitle) {
             if (bookWithTitle.title == updationDetails.title.toUpperCase()) return res.status(400).send({ status: false, message: "title with that you want to update already exist" })// if title already  present in Db //
