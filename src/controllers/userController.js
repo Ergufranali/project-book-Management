@@ -50,7 +50,6 @@ const createUser = async function (req, res){
     }
 
 }    
-         
 
 
 // login user ---------------------------------------------

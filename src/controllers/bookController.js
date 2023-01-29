@@ -11,11 +11,8 @@ const createBook = async function (req, res) {
         let data = req.body
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, message: "Please provide data" })
     
-    
         //Authorization -----------------------------------------------------------------------------------------
         if (req.decode.id != data.userId) return res.status(403).send({ status: false, message: "you are not authorized" })
-    
-    
     
         // validation for title//
         if (!isValid(data.title)) return res.status(400).send({ status: false, message: "title is mandatory" })
@@ -84,9 +81,7 @@ const getBookById = async function (req, res) {
         const reviewsData = await reviewModel.find({ bookId: bookId, isDeleted: false }).select({ _id: 1, bookId: 1, reviewedBy: 1, reviewedAt: 1, rating: 1, review: 1 })
         book = book.toObject()
         book.reviewsData = reviewsData
-        book.reviews = reviewsData.length
         res.status(200).send({ status: true,message: 'Books list' ,data: book })
-    
     }
     catch(error){
         res.status(500).send({ status: false, message: error.message })
@@ -113,7 +108,7 @@ const updateBookByID = async function (req, res) {
         }
         updationDetails.releasedAt = moment().format('YYYY-MM-DD') // adding updating time in releasedAt
         const updatedBook = await bookModel.findByIdAndUpdate(bookId, { $set: updationDetails }, { new: true })
-        res.status(200).send({ status: true, data: updatedBook })
+        res.status(200).send({ status: true, messgae:"book updated succesfully",data: updatedBook })
     }
     catch(error){
         res.status(500).send({ status: false, message: error.message })
@@ -131,7 +126,7 @@ const deleteBookByID = async function (req, res) {
         //authorization
         if (req.decode.id != book.userId) return res.status(403).send({ status: false, message: "you are not authorized" })
         const updatedBook = await bookModel.findByIdAndUpdate(bookId, { $set: { isDeleted: true, deletedAt: Date.now() } }, { new: true })
-        res.status(200).send({ status: true, data: updatedBook })
+        res.status(200).send({ status: true, message:"Book deleted succesfully" })
     }
     catch(error){
         res.status(500).send({ status: false, message: error.message })
