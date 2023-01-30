@@ -10,27 +10,24 @@ const createBook = async function (req, res) {
     try{
         let data = req.body
         if (Object.keys(data).length === 0) return res.status(400).send({ status: false, message: "Please provide data" })
-    
+
+        // validation for userId //
+        if (!isValid(data.userId)) return res.status(400).send({ status: false, message: "userId is mandatory" })
+        data.userId = data.userId.trim()
+        if (!ObjectId.isValid(data.userId)) return res.status(400).send({ status: false, message: "user id is not valid" })
+
         //Authorization -----------------------------------------------------------------------------------------
         if (req.decode.id != data.userId) return res.status(403).send({ status: false, message: "you are not authorized" })
     
         // validation for title//
         if (!isValid(data.title)) return res.status(400).send({ status: false, message: "title is mandatory" })
         
-        let book = await bookModel.findOne({ title: data.title, isDeleted: false })
+        let book = await bookModel.findOne({ title: data.title.toUpperCase(), isDeleted: false })
         if (book) return res.status(400).send({ status: false, message: "book already created" })
     
         // validation for excerpt//
         if (!isValid(data.excerpt)) return res.status(400).send({ status: false, message: "excerpt is mandatory" })
         
-    
-        // validation for userId //
-        if (!isValid(data.excerpt)) return res.status(400).send({ status: false, message: "userId is mandatory" })
-        data.userId = data.userId.trim()// trim title
-        if (!ObjectId.isValid(data.userId)) return res.status(400).send({ status: false, message: "user id is not valid" })
-        // const user = await userModel.findById(data.userId)
-        // if (!user) return res.status(401).send({ status: false, message: "user id not found" })
-    
         // validation for ISBN//
         if (!isValid(data.ISBN)) return res.status(400).send({ status: false, message: "ISBN is mandatory" })
         data.ISBN = data.ISBN.trim()// trim ISBN
@@ -75,6 +72,7 @@ const getBookById = async function (req, res) {
     try{
         const bookId = req.params.bookId
 
+        if(!ObjectId.isValid(bookId)) return res.status(400).send({status:false,message:"book id is not valid from path params"})
         let book = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!book) return res.status(404).send({ status: false, message: "book not found" })
     
@@ -92,6 +90,9 @@ const updateBookByID = async function (req, res) {
     try{
         const updationDetails = req.body
         const bookId = req.params.bookId
+
+        if(!ObjectId.isValid(bookId)) return res.status(400).send({status:false,message:"book id is not valid from path params"})
+
         const book = await bookModel.findOne({ _id: bookId, isDeleted: false })
         if (!book) return res.status(404).send({ status: false, message: "book not found" })// if book not present in DB
         console.log(updationDetails)// console 
@@ -121,6 +122,8 @@ const updateBookByID = async function (req, res) {
 const deleteBookByID = async function (req, res) {
     try{
         const bookId = req.params.bookId
+
+        if(!ObjectId.isValid(bookId)) return res.status(400).send({status:false,message:"book id is not valid from path params"})
         const book = await bookModel.findOne({ _id: bookId, isDeleted: false })
     
         if (!book) return res.status(404).send({ status: false, message: "book not found" })// if book not present in Db
