@@ -51,7 +51,7 @@ const updateReviewByID = async function (req, res) {
         const updationDetails = req.body
 
         if (!ObjectId.isValid(BookId)) return res.status(400).send({ status: false, message: "bookId is invalid" })
-        if (!ObjectId.isValid(reviewId)) return res.status(400).send({ status: false, message: "bookId is invalid" })
+        if (!ObjectId.isValid(reviewId)) return res.status(400).send({ status: false, message: "reviewId is invalid" })
 
 
         if (Object.keys(updationDetails).length == 0) return res.status(400).send({ status: false, message: "threre is no updation details" })
@@ -103,3 +103,5 @@ const deleteReviewById = async function (req, res) {
 module.exports.addReview = addReview
 module.exports.updateReviewByID = updateReviewByID
 module.exports.deleteReviewById = deleteReviewById
+
+

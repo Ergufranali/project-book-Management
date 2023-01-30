@@ -58,8 +58,9 @@ const getBooks = async function (req, res) {
         let queries = req.query
         queries.isDeleted = false
     
-        const books = await bookModel.find(queries).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
+        let books = await bookModel.find(queries).select({ _id: 1, title: 1, excerpt: 1, userId: 1, category: 1, releasedAt: 1, reviews: 1 })
         if (books.length == 0) return res.status(404).send({ status: false, message: "books not found" })
+        books= books.sort((a,b)=>(a.title >= b.title) ? 1 : -1 )
         res.status(200).send({ status: true, message: 'Books list',data: books })
     
     }
