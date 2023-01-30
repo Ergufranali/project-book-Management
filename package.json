@@ -10,6 +10,10 @@
     "type": "git",
     "url": "git+https://github.com/21tarun/bookManagement.git"
   },
+  "engines": {
+    "npm":">=8.0.0 <9.0.0",
+    "node": ">=16.0.0 <17.0.0"
+  },
   "author": "Ghufran, Paras, Tarun",
   "license": "ISC",
   "bugs": {
