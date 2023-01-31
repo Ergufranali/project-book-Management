@@ -1,10 +1,10 @@
 const express= require('express')
 const mongoose=require('mongoose')
 const app=express()
-
+const cors=require('cors')
 const route =require('./routes/route')
 
-
+app.use(cors())
 app.use(express.json())
 
 mongoose.set('strictQuery',true)
